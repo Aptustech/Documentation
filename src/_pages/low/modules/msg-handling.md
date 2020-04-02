@@ -99,5 +99,24 @@ void modules_cb(module_t *module, msg_t *msg) {
 }
 ```
 
+## Streaming
+Sometime you will have to deal with high frequency time constraints small datas. To make it easy Luos can manage a streaming flux trough a ring buffer for you.
+
+A streaming flux allow you to reduce drastically the time constraints of your Luos network by using big data chunk to optimize data rate efficiency. The idea is to give chunks of data to the receiver allowing it to consume them step by step at a given sampling frequency.
+
+Let's take a continuous motor trajectory as example.<br/>
+First, you have to define the sampling frequency allowing you to have a smooth movement on the motor. Let's take 200Hz for this example.
+In the sender side you will have to send a data chunk regularly, let's say each seconds.
+
+Based on those numbers, your data chunk size will be <br/>`chunk_time(s) x sampling_frequency(Hz) => 1x200=200`
+
+The module who send the trajectory have to make sure that the motor module always have data to consume. To do that you have to bootstrap your streaming flux by sending 2 data chunk to start and then send a new data chunk each chunk_time.
+This way receiver always have at least one data chunk ready to be consume.
+
+<img src="/_assets/img/streaming.png"/>
+
+
+ you will have to define a specific sampling frequency you have to send big data chunk regularly (each 1 seconds for example)
+
 
 <div class="cust_edit_page"><a href="https://{{gh_path}}/_pages/low/modules/msg-handling.md">Edit this page</a></div>
